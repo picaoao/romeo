@@ -125,7 +125,7 @@ defmodule Romeo.Transports.TCP do
       "result" = Romeo.XML.attr(stanza, "type")
       ^id = Romeo.XML.attr(stanza, "id")
 
-      %Romeo.JID{resource: resource} =
+      jid = %Romeo.JID{resource: resource} =
         stanza
         |> Romeo.XML.subelement("bind")
         |> Romeo.XML.subelement("jid")
@@ -134,6 +134,7 @@ defmodule Romeo.Transports.TCP do
 
       Logger.info fn -> "Bound to resource: #{resource}" end
       Kernel.send(owner, {:resource_bound, resource})
+      Kernel.send(owner, {:jid_bound, jid})
       %{conn | resource: resource}
     end)
   end
